@@ -16,6 +16,7 @@ function entrarNaSala() {
     )
     promessa.then(nomeSalvo)
     promessa.catch(nomeJaExistente)
+
 }
 
 function nomeSalvo() {
@@ -44,10 +45,9 @@ function processarMensagens(resposta) {
 
     divMensagens.innerHTML = ``;
 
-    for (i = 0; i < mensagens.length; i++) {
+    for (i = 0; i < 100; i++) {
         renderizarMensagens()
     }
-    //tem q arrumar isso aqui ó
     function renderizarMensagens() {
         if (mensagens[i].type === "status") {
             let mensagem = `
@@ -94,19 +94,25 @@ function processarMensagens(resposta) {
 
     setInterval(pegarMensagens, 3000)
 
-    setInterval(ultima.scrollIntoView(), 2000)
+    //setInterval(ultima.scrollIntoView(), 2000)
+
+    scroll()
+}
+
+function scroll() {
+    const arrMensagem = document.querySelectorAll(".mensagem")
+    const ultima = arrMensagem[arrMensagem.length - 1]
+    
+    ultima.scrollIntoView()
+
+    setInterval(ultima.scrollIntoView(), 3000)
 }
 
 function enviarMensagens() {
     const nomeUsuario = document.querySelector(".entryscreen input").value;
     const mensagemDigitada = document.querySelector(".espacamento input").value
 
-    /*    {
-        from: "nome do usuário",
-        to: "nome do destinatário (Todos se não for um específico)",
-        text: "mensagem digitada",
-        type: "message" // ou "private_message" para o bônus
-    } */
+    console.log(mensagemDigitada)
 
     const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages",
         {
@@ -120,7 +126,10 @@ function enviarMensagens() {
     promessa.then(mensagemEnviada)
     promessa.catch(mensagemNaoEnviada)
 
+
 }
+
+
 
 /* const mensagemDigitada = document.querySelector(".espacamento input")
 mensagemDigitada.addEventListener */
@@ -131,7 +140,7 @@ function mensagemEnviada(resposta) {
 
 function mensagemNaoEnviada(resposta) {
     alert("Você não está mais na sala.")
-    setTimeout(window.location.reload(),1000)
+    setTimeout(window.location.reload(), 1000)
 }
 
 /* function limpar() {
@@ -156,8 +165,8 @@ function consoleOnline(resposta) {
     console.log(resposta)
 }
 
-const divMensagens = document.querySelector(".mensagens");
+
+
 
 verificarOnline()
 pegarMensagens()
-
