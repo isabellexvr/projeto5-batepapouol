@@ -7,18 +7,18 @@ function pegarMensagens() {
 }
 
 function entrarNaSala() {
-   const nome =  document.querySelector(".entryscreen input").value;
+    const nome = document.querySelector(".entryscreen input").value;
 
-   const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants",
-   {
-    name: nome
-   }
-   )
-   promessa.then(nomeSalvo)
-   promessa.catch(nomeJaExistente)
+    const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants",
+        {
+            name: nome
+        }
+    )
+    promessa.then(nomeSalvo)
+    promessa.catch(nomeJaExistente)
 }
 
-function nomeSalvo () {
+function nomeSalvo() {
     const telaInicial = document.querySelector(".entryscreen")
     const conteudo = document.querySelector(".content.hide")
 
@@ -34,17 +34,20 @@ function nomeJaExistente(resposta) {
 
 function processarMensagens(resposta) {
 
+    const nomeUsuario = document.querySelector(".entryscreen input").value;
+
     const divMensagens = document.querySelector(".mensagens");
 
-    
+
     mensagens = resposta.data
     mensagensArr.push(mensagens)
 
     divMensagens.innerHTML = ``;
 
-for (i=0; i<mensagens.length; i++) {
-    renderizarMensagens()
-}
+    for (i = 0; i < mensagens.length; i++) {
+        renderizarMensagens()
+    }
+    //tem q arrumar isso aqui ó
     function renderizarMensagens() {
         if (mensagens[i].type === "status") {
             let mensagem = `
@@ -52,25 +55,28 @@ for (i=0; i<mensagens.length; i++) {
                 <div class="fix">
                     <em>&nbsp${mensagens[i].time}</em>
                     <strong>&nbsp${mensagens[i].from}</strong>
-                    <span>&nbspentra na sala...</span>
+                    <span>&nbsp${mensagens[i].text}</span>
                 </div>
             </div>`;
             divMensagens.innerHTML += mensagem
         }
         if (mensagens[i].type === "message") {
             let mensagem = `
-            <div class="mensagem transito">
+            <div class="mensagem conteudo">
                 <div class="fix">
                     <em>&nbsp${mensagens[i].time}</em>
                     <strong>&nbsp${mensagens[i].from}</strong>
-                    <span>&nbspentra na sala...</span>
+                    <span>&nbsppara</span>
+                    <strong>${mensagens[i].to}</strong>
+                    <span>: ${mensagens[i].text}</span>
                 </div>
             </div>`;
             divMensagens.innerHTML += mensagem
         }
-        if (mensagens[i].type === "private_message") {
-            let mensagem = `
-            <div class="mensagem reservado">
+        if (nomeUsuario === mensagens[i].to) {
+            if (mensagens[i].type === "private_message") {
+                let mensagem = `
+            <div class="mensagem reservada">
                 <div class="fix">
                     <em>&nbsp${mensagens[i].time}</em>
                     <strong>${mensagens[i].from}</strong>
@@ -79,29 +85,79 @@ for (i=0; i<mensagens.length; i++) {
                     <span>: ${mensagens[i].text}</span>
                 </div>
             </div>`;
-            divMensagens.innerHTML += mensagem
+                divMensagens.innerHTML += mensagem
+            }
         }
+    }
+
+    let ultima = divMensagens.children[divMensagens.children.length - 1]
+
+    setInterval(pegarMensagens, 3000)
+
+    setInterval(ultima.scrollIntoView(), 2000)
 }
 
-/* function verificarOnline () {
-    const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/status", 
-    {
-        name: 
-    }
+function enviarMensagens() {
+    const nomeUsuario = document.querySelector(".entryscreen input").value;
+    const mensagemDigitada = document.querySelector(".espacamento input").value
+
+    /*    {
+        from: "nome do usuário",
+        to: "nome do destinatário (Todos se não for um específico)",
+        text: "mensagem digitada",
+        type: "message" // ou "private_message" para o bônus
+    } */
+
+    const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages",
+        {
+            from: nomeUsuario,
+            to: "Todos",
+            text: mensagemDigitada,
+            type: "message"
+        }
     )
+
+    promessa.then(mensagemEnviada)
+    promessa.catch(mensagemNaoEnviada)
+
+}
+
+/* const mensagemDigitada = document.querySelector(".espacamento input")
+mensagemDigitada.addEventListener */
+
+function mensagemEnviada(resposta) {
+    pegarMensagens()
+}
+
+function mensagemNaoEnviada(resposta) {
+    alert("Você não está mais na sala.")
+    setTimeout(window.location.reload(),1000)
+}
+
+/* function limpar() {
+    const mensagemDigitada = document.querySelector("footer input").value
+    mensagemDigitada = ""
 } */
 
-//todas.sort()
+function verificarOnline() {
+    const nome = document.querySelector(".entryscreen input").value;
 
-let ultima = divMensagens.children[divMensagens.children.length-1]
+    const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/status",
+        {
+            name: nome
+        }
+    )
 
-setInterval(pegarMensagens,3000)
+    promessa.then()
+    setInterval(verificarOnline, 5000)
+}
 
-setInterval(ultima.scrollIntoView(),10000)
-
-
+function consoleOnline(resposta) {
+    console.log(resposta)
 }
 
 const divMensagens = document.querySelector(".mensagens");
 
+verificarOnline()
 pegarMensagens()
+
