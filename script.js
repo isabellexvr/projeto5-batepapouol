@@ -3,7 +3,7 @@ let mensagensArr = []
 function pegarMensagens() {
     const promessa = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages")
     promessa.then(processarMensagens)
-    promessa.cath(mostrarErro)
+    //promessa.cath(mostrarErro)
 }
 
 function mostrarErro(erro) {
@@ -35,11 +35,22 @@ inputEntry.addEventListener("keypress", function(event) {
 
 function nomeSalvo() {
     const telaInicial = document.querySelector(".entryscreen")
-    const conteudo = document.querySelector(".content.hide")
+
 
     telaInicial.classList.add("hide")
-    conteudo.classList.remove("hide")
 
+    setTimeout(loadScreen, 2500)
+
+    scroll()
+
+}
+
+function loadScreen () {
+    const conteudo = document.querySelector(".content.hide")
+    const loadScreen = document.querySelector(".segundaentryscreen")
+
+    loadScreen.classList.add("hide")
+    conteudo.classList.remove("hide")
 }
 
 function nomeJaExistente(resposta) {
@@ -79,7 +90,7 @@ function processarMensagens(resposta) {
                 <div class="fix">
                     <em>&nbsp${mensagens[i].time}</em>
                     <strong>&nbsp${mensagens[i].from}</strong>
-                    <span>&nbsppara</span>
+                    <span>para</span>
                     <strong>${mensagens[i].to}</strong>
                     <span>: ${mensagens[i].text}</span>
                 </div>
@@ -103,16 +114,16 @@ function processarMensagens(resposta) {
         }
     }
 
-    setInterval(pegarMensagens, 3000)
-
+    setInterval(pegarMensagens, 6000)
     scroll()
 }
 
 function scroll() {
     const arrMensagem = document.querySelectorAll(".mensagem")
     const ultima = arrMensagem[arrMensagem.length - 1]
-
     ultima.scrollIntoView()
+
+   // setInterval(, 3000)
 }
 
 function enviarMensagens() {
@@ -132,6 +143,8 @@ function enviarMensagens() {
     promessa.catch(mensagemNaoEnviada)
 
     document.getElementById('escrever_mensagem').value = ''
+
+    pegarMensagens()
 }
 
 const input = document.getElementById('escrever_mensagem')
