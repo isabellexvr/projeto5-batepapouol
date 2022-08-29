@@ -22,8 +22,8 @@
 <body>
     <div class="entryscreen">
         <img src="./imagens/logo 2.png" alt="logo_bate_papo_uol">
-        <input type="text" placeholder="Digite seu nome">
-        <button onclick="entrarNaSala()">Entrar</button>
+        <input type="text" placeholder="Digite seu nome" id="escrever_nome">
+        <button onclick="entrarNaSala()" id="botao_entrar">Entrar</button>
     </div>
     <div class="content hide">
         <header>
@@ -40,7 +40,8 @@
         <footer>
             <div class="espacamento bottom">
                 <input type="text" placeholder="Escreva aqui..." name="Escreva aqui..." id="escrever_mensagem">
-                <ion-icon name="paper-plane-outline" onclick="enviarMensagens()"></ion-icon>
+                <ion-icon name="paper-plane-outline" onclick="enviarMensagens()"
+                id="botao_enviarmsg"></ion-icon>
             </div>
     </div>
     </footer>

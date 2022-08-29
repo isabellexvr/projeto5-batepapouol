@@ -3,7 +3,11 @@ let mensagensArr = []
 function pegarMensagens() {
     const promessa = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages")
     promessa.then(processarMensagens)
-    //promessa.cath(mostrarErro)
+    promessa.cath(mostrarErro)
+}
+
+function mostrarErro(erro) {
+    console.log(erro)
 }
 
 function entrarNaSala() {
@@ -17,7 +21,17 @@ function entrarNaSala() {
     promessa.then(nomeSalvo)
     promessa.catch(nomeJaExistente)
 
+    document.getElementById('escrever_nome').value = ''
+
 }
+
+const inputEntry = document.getElementById('escrever_nome')
+inputEntry.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("botao_entrar").click();
+    }
+});
 
 function nomeSalvo() {
     const telaInicial = document.querySelector(".entryscreen")
@@ -30,7 +44,6 @@ function nomeSalvo() {
 
 function nomeJaExistente(resposta) {
     alert("Erro! Nome de usuário já existente. Por favor, escolha outro.")
-    console.log(resposta)
 }
 
 function processarMensagens(resposta) {
@@ -90,11 +103,7 @@ function processarMensagens(resposta) {
         }
     }
 
-    let ultima = divMensagens.children[divMensagens.children.length - 1]
-
     setInterval(pegarMensagens, 3000)
-
-    //setInterval(ultima.scrollIntoView(), 2000)
 
     scroll()
 }
@@ -102,17 +111,13 @@ function processarMensagens(resposta) {
 function scroll() {
     const arrMensagem = document.querySelectorAll(".mensagem")
     const ultima = arrMensagem[arrMensagem.length - 1]
-    
-    ultima.scrollIntoView()
 
-    setInterval(ultima.scrollIntoView(), 3000)
+    ultima.scrollIntoView()
 }
 
 function enviarMensagens() {
     const nomeUsuario = document.querySelector(".entryscreen input").value;
     const mensagemDigitada = document.querySelector(".espacamento input").value
-
-    console.log(mensagemDigitada)
 
     const promessa = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages",
         {
@@ -126,27 +131,26 @@ function enviarMensagens() {
     promessa.then(mensagemEnviada)
     promessa.catch(mensagemNaoEnviada)
 
-
+    document.getElementById('escrever_mensagem').value = ''
 }
 
+const input = document.getElementById('escrever_mensagem')
+input.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("botao_enviarmsg").click();
+    }
+});
 
 
-/* const mensagemDigitada = document.querySelector(".espacamento input")
-mensagemDigitada.addEventListener */
-
-function mensagemEnviada(resposta) {
+function mensagemEnviada() {
     pegarMensagens()
 }
 
-function mensagemNaoEnviada(resposta) {
+function mensagemNaoEnviada() {
     alert("Você não está mais na sala.")
     setTimeout(window.location.reload(), 1000)
 }
-
-/* function limpar() {
-    const mensagemDigitada = document.querySelector("footer input").value
-    mensagemDigitada = ""
-} */
 
 function verificarOnline() {
     const nome = document.querySelector(".entryscreen input").value;
@@ -164,9 +168,6 @@ function verificarOnline() {
 function consoleOnline(resposta) {
     console.log(resposta)
 }
-
-
-
 
 verificarOnline()
 pegarMensagens()
